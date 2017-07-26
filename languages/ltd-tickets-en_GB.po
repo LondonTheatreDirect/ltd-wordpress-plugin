@@ -1,9 +1,8 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ltd-tickets\n"
-"POT-Creation-Date: 2017-07-26 11:47+0100\n"
-"PO-Revision-Date: 2017-07-20 11:51+0100\n"
+"POT-Creation-Date: 2017-07-26 11:48+0100\n"
+"PO-Revision-Date: 2017-07-26 11:49+0100\n"
 "Last-Translator: \n"
 "Language-Team: London Theatre Direct\n"
 "Language: en_GB\n"
@@ -19,126 +18,129 @@ msgstr ""
 #: class-ltd-tickets-template-functions.php:81
 #: class-ltd-tickets-template-functions.php:439
 msgid "Nearest Tube"
-msgstr ""
+msgstr "Nearest Tube"
 
 #: class-ltd-tickets-template-functions.php:85
 msgid "Nearest Train"
-msgstr ""
+msgstr "Nearest Train"
 
 #: class-ltd-tickets-template-functions.php:99
 #: class-ltd-tickets-template-functions.php:102
 #: class-ltd-tickets-template-functions.php:445
 msgid "Seating Plan"
-msgstr ""
+msgstr "Seating Plan"
 
 #: class-ltd-tickets-template-functions.php:101
 msgid "Click seating plan to see full size version"
-msgstr ""
+msgstr "Click seating plan to see full size version"
 
 #: class-ltd-tickets-template-functions.php:151
 #: class-ltd-tickets-template-functions.php:162
 #, php-format
 msgid "<span class=\"from\">From</span> %s"
-msgstr ""
+msgstr "<span class=\"from\">From</span> %s"
 
 #: class-ltd-tickets-template-functions.php:153
 msgid "Click for prices"
-msgstr ""
+msgstr "Click for prices"
 
 #: class-ltd-tickets-template-functions.php:166
 msgid "Click \"Book Tickets\" for latest prices"
-msgstr ""
+msgstr "Click \"Book Tickets\" for latest prices"
 
 #: class-ltd-tickets-template-functions.php:198
 msgid "Book Tickets"
-msgstr ""
+msgstr "Book Tickets"
 
 #: class-ltd-tickets-template-functions.php:206
 msgid "No more performances!"
-msgstr ""
+msgstr "No more performances!"
 
 #: class-ltd-tickets-template-functions.php:266
 msgid "Image Gallery"
-msgstr ""
+msgstr "Image Gallery"
 
 #: class-ltd-tickets-template-functions.php:270
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #: class-ltd-tickets-template-functions.php:270
 msgid "images"
-msgstr ""
+msgstr "images"
 
 #: class-ltd-tickets-template-functions.php:339
 msgid "Minimum Age"
-msgstr ""
+msgstr "Minimum Age"
 
 #: class-ltd-tickets-template-functions.php:379
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: class-ltd-tickets-template-functions.php:384
 msgid "Starts"
-msgstr ""
+msgstr "Starts"
 
 #: class-ltd-tickets-template-functions.php:388
 msgid "Ends"
-msgstr ""
+msgstr "Ends"
 
 #: class-ltd-tickets-template-functions.php:393
 msgid "Running Time"
-msgstr ""
+msgstr "Running Time"
 
 #: class-ltd-tickets-template-functions.php:399
 msgid "Category"
-msgstr ""
+msgstr "Category"
 
 #: class-ltd-tickets-template-functions.php:400
 #: class-ltd-tickets-template-functions.php:518
 msgid "Tickets"
-msgstr ""
+msgstr "Tickets"
 
 #: class-ltd-tickets-template-functions.php:423
 #: class-ltd-tickets-template-functions.php:428
 msgid "Venue"
-msgstr ""
+msgstr "Venue"
 
 #: class-ltd-tickets-template-functions.php:433
 msgid "Address"
-msgstr ""
+msgstr "Address"
 
 #: class-ltd-tickets-template-functions.php:434
 msgid "View Google Map"
-msgstr ""
+msgstr "View Google Map"
 
 #: class-ltd-tickets-template-functions.php:446
 msgid "View Seating Plan"
-msgstr ""
+msgstr "View Seating Plan"
 
 #: class-ltd-tickets-template-functions.php:477
 msgid "All"
-msgstr ""
+msgstr "All"
 
 #: class-ltd-tickets-template-functions.php:499
 msgid "Alphabetical (Asc)"
-msgstr ""
+msgstr "Alphabetical (Asc)"
 
 #: class-ltd-tickets-template-functions.php:500
 msgid "Alphabetical (Desc)"
-msgstr ""
+msgstr "Alphabetical (Desc)"
 
 #: class-ltd-tickets-template-functions.php:502
 msgid "Cheapest"
-msgstr ""
+msgstr "Cheapest"
 
 #: class-ltd-tickets-template-functions.php:503
 msgid "Most Expensive"
-msgstr ""
+msgstr "Most Expensive"
 
 #: class-ltd-tickets-template-functions.php:504
 msgid "Ending Soon"
-msgstr ""
+msgstr "Ending Soon"
 
 #: class-ltd-tickets-template-functions.php:505
 msgid "Coming Soon"
-msgstr ""
+msgstr "Coming Soon"
+
+#~ msgid "From"
+#~ msgstr "From"

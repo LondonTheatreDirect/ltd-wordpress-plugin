@@ -148,7 +148,7 @@ class LTD_Tickets_Template_Functions {
         }
         $options = get_post_meta($postid);
         if (isset($options['minimum_price']) && $options['minimum_price'][0] != "0") {
-            echo __('From', $this->plugin_name) . " " . ltd_format_price($options['minimum_price'][0]);
+            echo sprintf(__('<span class="from">From</span> %s', $this->plugin_name), ltd_format_price($options['minimum_price'][0]));
         } else {
             echo __('Click for prices', $this->plugin_name);
         }
@@ -159,7 +159,7 @@ class LTD_Tickets_Template_Functions {
         $options = get_post_meta($post->ID);
         if (isset($options['minimum_price']) && $options['minimum_price'][0] != "0") {
             echo '<div class="product-from-price">';
-            echo '<span class="product-from-price-prefix">' . __('From', $this->plugin_name) . "</span> " . ltd_format_price($options['minimum_price'][0]);
+            echo sprintf(__('<span class="from">From</span> %s', $this->plugin_name), ltd_format_price($options['minimum_price'][0]));
             echo '</div>';
         } else {
             echo '<div class="product-no-price">';

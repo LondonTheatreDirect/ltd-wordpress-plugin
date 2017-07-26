@@ -21,8 +21,8 @@ class Ltd_Tickets_Defaults
 
     public static function get_default_defaults() {
         return array(
-            'api_key_sandbox'                           => 'ammpaag3cd7uy6h4s6hzpbpq',
-            'api_key_live'                              => 'em3suqy9zpwu6qkgkh9pjbbf',
+            'api_key_sandbox'                           => 'cb8th3whhnhvsabv4t2mdh2r',
+            'api_key_live'                              => 'b7axztchxzwjwmrvxmmnfzuh',
             'awin_id'                                   => '140777',
             'awin_hostname'                             => 'https://www.ltdtickets.com'
         );
