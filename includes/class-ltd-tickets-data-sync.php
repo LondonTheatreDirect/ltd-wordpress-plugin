@@ -81,25 +81,6 @@ class LTD_Tickets_Data_Sync
         $venues = $this->integration->fetch_venues();
         if ($venues === false) return 0;
 
-        $excludes        = array();
-        $args            = array(
-            'posts_per_page' => -1,
-            'post_type' => $this->plugin_options['config']['venue_post_type'],
-            'orderby' => 'title',
-            'order' => 'ASC',
-            'suppress_filters' => 0
-        );
-        $imported_venues = get_posts( $args );
-        if ( !empty($imported_venues) ):
-            foreach ( $imported_venues as $imported_venue ):
-                try {
-                    $excludes[] = (int) get_post_meta( $imported_venue->ID, 'venue_id', true );
-                }
-                catch ( Exception $ex ) {
-                    continue;
-                }
-            endforeach;
-        endif;
 
 
         $i = 0;
@@ -111,8 +92,24 @@ class LTD_Tickets_Data_Sync
             }
             if ( ( count( $list ) > 0 ) && !in_array( $venue['VenueId'], $list ) )
                 continue;
-            if ( in_array( $venue['VenueId'], $excludes ) )
-                continue;
+
+            $args = array(
+                'posts_per_page'        => 1,
+                'post_type'             => $this->plugin_options['config']['venue_post_type'],
+                'post_status'           => array(
+                                            'publish',
+                                            'pending',
+                                            'draft'
+                                        ),
+                'meta_query'            => array(
+                                                array(
+                                                    'key' => 'venue_id',
+                                                    'value' => $venue['VenueId']
+                                                )
+                                            )
+            );
+            $check_post = get_posts($args);
+            if (!empty($check_post)) continue;
 
 
             $content = "";
@@ -401,38 +398,6 @@ class LTD_Tickets_Data_Sync
         $products = $this->integration->fetch_products();
         if ($products === false) return 0;
 
-
-        $excludes          = array();
-        $args              = array(
-            'posts_per_page' => -1,
-            'post_type' => $this->plugin_options['config']['product_post_type'],
-            'orderby' => 'title',
-            'order' => 'ASC',
-            'suppress_filters' => 0,
-            'post_status' => array(
-                 'publish',
-                'pending',
-                'draft'
-            )
-        );
-        $imported_products = get_posts( $args );
-        if ( !empty( $imported_products ) ):
-            foreach ( $imported_products as $imported_product ):
-                try {
-                    $excludes[] = (int) get_post_meta( $imported_product->ID, 'product_id', true );
-                }
-                catch ( Exception $ex ) {
-                    $this->Log( array(
-                         'type' => 'ERROR',
-                        'message' => sprintf( 'Unable to evaluate Product ID #%d: %s', $ex->getCode(), $ex->getMessage() ),
-                        'stack' => var_export( $ex->getTrace() )
-                    ) );
-                    continue;
-                }
-            endforeach;
-        endif;
-
-
         $i = 0;
         foreach ( $products as $product ) {
             if ( stripos( strrev( $product['Name'] ), "KROY WEN " ) === 0 )
@@ -440,8 +405,6 @@ class LTD_Tickets_Data_Sync
             if ( ( count( $list ) > 0 ) && !in_array( $product['EventId'], $list ) )
                 continue;
             if ( empty( $product['EventDetailUrl'] ) )
-                continue;
-            if ( in_array( $product['EventId'], $excludes ) )
                 continue;
             if ( !isset( $product['StartDate'] ) || !isset( $product['EndDate'] ) ) {
                 $this->Log( array(
@@ -457,6 +420,24 @@ class LTD_Tickets_Data_Sync
                ) );
                 continue;
             }
+
+            $args = array(
+                'posts_per_page'        => 1,
+                'post_type'             => $this->plugin_options['config']['product_post_type'],
+                'post_status'           => array(
+                                            'publish',
+                                            'pending',
+                                            'draft'
+                                        ),
+                'meta_query'            => array(
+                                                array(
+                                                    'key' => 'product_id',
+                                                    'value' => $product['EventId']
+                                                )
+                                            )
+            );
+            $check_post = get_posts($args);
+            if (!empty($check_post)) continue;
 
             $content = "";
             if (!empty($product['Description'])) {
