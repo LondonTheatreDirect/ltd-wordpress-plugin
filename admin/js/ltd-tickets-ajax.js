@@ -128,7 +128,20 @@ var imports = {
                             "scrollCollapse": true,
                             "paging": false
                         });
-
+                        $("[name='ltd_settings']").on("submit", function (e) {
+                            var form = this;
+                            var params = tbl.$('input').serializeArray();
+                            $.each(params, function () {
+                                if (!$.contains(document, form[this.name])) {
+                                    $(form).append(
+                                       $('<input>')
+                                          .attr('type', 'hidden')
+                                          .attr('name', this.name)
+                                          .val(this.value)
+                                    );
+                                }
+                            });
+                        })
                     }
                 }
             );
@@ -191,6 +204,20 @@ var imports = {
 						        "scrollCollapse": true,
 						        "paging": false
 						    });
+						    $("[name='ltd_settings']").on("submit", function (e) {
+						        var form = this;
+						        var params = tbl.$('input').serializeArray();
+						        $.each(params, function () {
+						            if (!$.contains(document, form[this.name])) {
+						                $(form).append(
+                                           $('<input>')
+                                              .attr('type', 'hidden')
+                                              .attr('name', this.name)
+                                              .val(this.value)
+                                        );
+						            }
+						        });
+						    })
 						}
 						
 					}
