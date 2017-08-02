@@ -22,6 +22,8 @@ class Ltd_Tickets_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+        require_once( plugin_dir_path( dirname( __FILE__ ) ) . 'includes/updaters/class-ltd-tickets-background-process-update.php' );
+        $this->process_update_all = new LTD_Tickets_Background_Process_Update();
 
 	}
 
@@ -158,29 +160,72 @@ class Ltd_Tickets_Admin {
 
         $imports = array ();
         $updates = array ();
+        $async_fn = "";
 
-        if ( isset( $_POST['ImportAll'] ) && !empty( $_POST['ImportAll']) )                             $imports = $LTD_Tickets_Data_Sync->import_all();
+        if ( isset( $_POST['ImportAll'] ) && !empty( $_POST['ImportAll']) ) {
+            $async_fn = "import_all";
+        };
 
-        if ( isset( $_POST['ImportProducts'] ) && !empty( $_POST['ImportProducts'] ) )                  $imports['products'] = $LTD_Tickets_Data_Sync->import_products();
+        if ( isset( $_POST['ImportProducts'] ) && !empty( $_POST['ImportProducts']) ) {
+            $async_fn = "import_products";
+        };
 
-        if ( isset( $_POST['ImportVenues'] ) && !empty($_POST['ImportVenues'] ) )                       $imports['venues'] =  $LTD_Tickets_Data_Sync->import_venues();
+        if ( isset( $_POST['ImportVenues'] ) && !empty( $_POST['ImportVenues']) ) {
+            $async_fn = "import_venues";
+        };
 
-        if (isset( $_POST['ImportCategories'] ) && !empty($_POST['ImportCategories'] ) )                $imports['categories'] =  $LTD_Tickets_Data_Sync->import_categories();
+        if ( isset( $_POST['UpdateAll'] ) && !empty( $_POST['UpdateAll']) ) {
+            $async_fn = "sync_all";
+        };
 
-        if (isset( $_POST['ImportSelectedProducts'] ) && !empty($_POST['ImportSelectedProducts'] ) )    $imports['products'] =  $LTD_Tickets_Data_Sync->import_selected_products();
+        if ( isset( $_POST['UpdateProducts'] ) && !empty( $_POST['UpdateProducts']) ) {
+            $async_fn = "sync_products";
+        };
 
-        if ( isset( $_POST['ImportSelectedVenues'] ) && !empty( $_POST['ImportSelectedVenues'] ) )      $imports['venues'] =  $LTD_Tickets_Data_Sync->import_selected_venues();
+        if ( isset( $_POST['UpdateVenues'] ) && !empty( $_POST['UpdateVenues']) ) {
+            $async_fn = "sync_venues";
+        };
 
-        if ( isset( $_POST['UpdateAll'] ) && !empty( $_POST['UpdateAll'] ) )                            $updates = $LTD_Tickets_Data_Sync->sync_all();
+
+
+        if ($async_fn != "") {
+            $this->process_update_all->push_to_queue( array($async_fn) );
+            $this->process_update_all->save()->dispatch();
+            new LTD_Tickets_Import_Notice( $async_fn, "background", $this->plugin_name );
+        }
+
+        if ( isset( $_POST['ImportSelectedProducts'] ) && !empty( $_POST['ImportSelectedProducts']) ) {
+            $importArray = array();
+            foreach ( $_POST as $key => $value ) {
+                if ( strstr( $key, 'product-' ) ) {
+                    $x = str_replace( 'product-', '', $key );
+                    array_push( $importArray, $x );
+                }
+            }
+            $this->process_update_all->push_to_queue( array('import_selected_products', $importArray ) );
+            $this->process_update_all->save()->dispatch();
+            new LTD_Tickets_Import_Notice('import_selected_products', "background", $this->plugin_name );
+        };
+
+        if ( isset( $_POST['ImportSelectedVenues'] ) && !empty( $_POST['ImportSelectedVenues']) ) {
+            $importArray = array();
+            foreach ( $_POST as $key => $value ) {
+                if ( strstr( $key, 'venue-' ) ) {
+                    $x = str_replace( 'venue-', '', $key );
+                    array_push( $importArray, $x );
+                }
+            }
+            $this->process_update_all->push_to_queue( array('import_selected_venues', $importArray ) );
+            $this->process_update_all->save()->dispatch();
+            new LTD_Tickets_Import_Notice('import_selected_venues', "background", $this->plugin_name );
+        };
+
 
         if ( isset( $_POST['UpdateSelectedProducts'] ) && !empty( $_POST['UpdateSelectedProducts'] ) )  $updates['products'] = $LTD_Tickets_Data_Sync->sync_selected_products();
 
-        if ( isset( $_POST['UpdateProducts'] ) && !empty( $_POST['UpdateProducts'] ) )                  $updates['products'] = $LTD_Tickets_Data_Sync->sync_products();
-
         if ( isset( $_POST['UpdateSelectedVenues'] ) && !empty( $_POST['UpdateSelectedVenues'] ) )      $updates['venues'] = $LTD_Tickets_Data_Sync->sync_selected_venues();
 
-        if ( isset( $_POST['UpdateVenues'] ) && !empty( $_POST['UpdateVenues'] ) )                      $updates['venues'] = $LTD_Tickets_Data_Sync->sync_venues();
-
+        if (isset( $_POST['ImportCategories'] ) && !empty($_POST['ImportCategories'] ) ) $imports['categories'] =  $LTD_Tickets_Data_Sync->import_categories();
 
         if (!empty($imports)) {
             new LTD_Tickets_Import_Notice($imports, "import", $this->plugin_name );

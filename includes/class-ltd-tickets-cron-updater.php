@@ -115,18 +115,18 @@ class Ltd_Tickets_Cron_Updator {
     public function ltd_update_all() {
 
         if ($this->plugin_options['sync']['import_categories'] == 1) {
-            $this->process_update_all->push_to_queue( 'import_categories' );
+            $this->process_update_all->push_to_queue( array('import_categories') );
         }
         if ($this->plugin_options['sync']['import_venues'] == 1) {
-            $this->process_update_all->push_to_queue( 'import_venues' );
+            $this->process_update_all->push_to_queue( array('import_venues') );
         }
         if ($this->plugin_options['sync']['import_products'] == 1) {
-            $this->process_update_all->push_to_queue( 'import_products' );
+            $this->process_update_all->push_to_queue( array('import_products') );
         }
 
-        $this->process_update_all->push_to_queue( 'sync_categories' );
-        $this->process_update_all->push_to_queue( 'sync_venues' );
-        $this->process_update_all->push_to_queue( 'sync_products' );
+        $this->process_update_all->push_to_queue( array('sync_categories') );
+        $this->process_update_all->push_to_queue( array('sync_venues') );
+        $this->process_update_all->push_to_queue( array('sync_products') );
 
         $this->process_update_all->save()->dispatch();
 

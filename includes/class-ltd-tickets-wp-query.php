@@ -75,7 +75,7 @@ class LTD_Tickets_WP_Query
     }
 
     public function ltd_apply_daterestriction($query) {
-        if (!is_admin()
+        if ((!is_admin() &! defined( 'DOING_CRON' ))
            && (
                 (
                     in_array ( $query->get('post_type'), array($this->plugin_options['config']['product_post_type']))

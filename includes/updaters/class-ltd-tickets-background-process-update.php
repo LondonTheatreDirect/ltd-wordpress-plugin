@@ -34,7 +34,10 @@ class LTD_Tickets_Background_Process_Update extends WP_Background_Process {
 	protected function task( $item ) {
         $LTD_Tickets_Data_Sync = new LTD_Tickets_Data_Sync( LTD_PLUGIN_NAME, LTD_PLUGIN_VERSION );
 
-        switch( $item ) {
+        switch( $item[0] ) {
+            case "import_all" :
+                $LTD_Tickets_Data_Sync->import_all();
+                break;
 
             case "import_categories" :
                 $LTD_Tickets_Data_Sync->import_categories();
@@ -46,6 +49,18 @@ class LTD_Tickets_Background_Process_Update extends WP_Background_Process {
 
             case "import_products" :
                 $LTD_Tickets_Data_Sync->import_products();
+                break;
+
+            case "import_selected_venues" :
+                $LTD_Tickets_Data_Sync->import_venues($item[1]);
+                break;
+
+            case "import_selected_products" :
+                $LTD_Tickets_Data_Sync->import_products($item[1]);
+                break;
+
+            case "sync_all" :
+                $LTD_Tickets_Data_Sync->sync_all();
                 break;
 
             case "sync_categories" :

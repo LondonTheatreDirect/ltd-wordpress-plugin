@@ -422,6 +422,11 @@ class LTD_Tickets_Data_Sync
                     $excludes[] = (int) get_post_meta( $imported_product->ID, 'product_id', true );
                 }
                 catch ( Exception $ex ) {
+                    $this->Log( array(
+                         'type' => 'ERROR',
+                        'message' => sprintf( 'Unable to evaluate Product ID #%d: %s', $ex->getCode(), $ex->getMessage() ),
+                        'stack' => var_export( $ex->getTrace() )
+                    ) );
                     continue;
                 }
             endforeach;
@@ -793,7 +798,7 @@ class LTD_Tickets_Data_Sync
      */
 
 
-    public function import_categories( $delete_existing = true )
+    public function import_categories( $delete_existing = false )
     {
 
         $categories = $this->integration->fetch_product_types();
