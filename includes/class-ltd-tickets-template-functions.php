@@ -300,7 +300,7 @@ class LTD_Tickets_Template_Functions {
         $options = get_post_meta($post->ID);
         if (!empty($options['short_offer_text'][0])) {
             echo '<div class="offer-text">';
-            echo '<span class="offer-tag">Offer</span><span class="offer-label">' . esc_html($options['short_offer_text'][0]) . '</span>';
+            echo '<span class="offer-tag">' .  __('Offer', $this->plugin_name) . '</span><span class="offer-label">' . esc_html($options['short_offer_text'][0]) . '</span>';
             echo '<div class="ukds-clearfix"></div>';
             echo '</div>';
         }
@@ -359,7 +359,7 @@ class LTD_Tickets_Template_Functions {
         $options = get_post_meta($post->ID);
         if (!empty($options['important_notice'])) {
             echo "<section class='ukds-product-info-meta widget'>";
-            echo "<h2 class='widget-title'>Important Notice</h2>";
+            echo "<h2 class='widget-title'>" . __('Important Notice', $this->plugin_name) . "</h2>";
             echo "<div class='textwidget'>";
             echo ltd_sanitise_meta_text($options['important_notice'][0]);
             echo "</div>";

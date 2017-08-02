@@ -192,7 +192,7 @@
                                     <th><span>AWIN ID</span></th>
                                     <td>
                                         <input id="<?php echo $this->plugin_name; ?>-partner_awin_id" name="<?php echo $this->plugin_name; ?>[partner_awin_id]" type="text" value="<?php echo (!empty($partner['awin_id']) ? esc_attr($partner['awin_id']) : ""); ?>" placeholder="<?php echo $options['default']['awin_id']; ?>" class="regular-text"><br>
-                                        <span class="description"><?php _e( 'Enter your AWIN partner ID.  If you have not yet signed up to the London Theatre Direct partner programme <a href="">Click here</a>' , $this->plugin_name ); ?></span>
+                                        <span class="description"><?php _e( 'Enter your AWIN partner ID.', $this->plugin_name ); ?></span>
                                     </td>
                                 </tr>
                                 <tr>
