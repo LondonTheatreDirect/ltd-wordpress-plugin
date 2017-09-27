@@ -72,7 +72,7 @@ class LTD_Tickets_Import_Notice {
 
             if ($possible_issue) {
                 $message.= "<br /><br />";
-                $message.= __("Not imported what you expected? Check the <a href='/admin.php?page=$plugin_name-log'>Log</a> for import errors.");
+                $message.= __("Not imported what you expected? Check the <a href='/wp-admin/admin.php?page=$plugin_name-log'>Log</a> for import errors.");
 
             }
 

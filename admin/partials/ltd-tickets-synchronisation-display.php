@@ -108,7 +108,7 @@
                                 <th><span><?php _e( "Product Update Values" , $this->plugin_name ); ?></span></th>
                                 <td>
                                     <p><?php _e('Select which values you would like to be automatically updated.<br /><strong>Please Note:</strong> If you make changes to a product value that is checked below then those changes will be overwritten when updates occur.', $this->plugin_name); ?></p><br />
-                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_tagline]" <?php echo ($sync_options['product_update_tagline'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Tagline" , $this->plugin_name ); ?></label><br />
+                                    <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_tagline]" <?php echo ($sync_options['product_update_tagline'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Tagline" , $this->plugin_name ); ?></label><br />
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_main_image_url]" <?php echo ($sync_options['product_update_main_image_url'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Main Image URL" , $this->plugin_name ); ?></label><br />
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_image_gallery]" <?php echo ($sync_options['product_update_image_gallery'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Image Gallery" , $this->plugin_name ); ?></label><br />
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_running_time]" <?php echo ($sync_options['product_update_running_time'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Running Time" , $this->plugin_name ); ?></label><br />
@@ -121,6 +121,9 @@
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_offer_price]" <?php echo ($sync_options['product_update_offer_price'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Offer Price" , $this->plugin_name ); ?></label><br />
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_short_offer_text]" <?php echo ($sync_options['product_update_short_offer_text'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Short Offer Text" , $this->plugin_name ); ?></label><br />
                                     <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_long_offer_text]" <?php echo ($sync_options['product_update_long_offer_text'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Long Offer Text" , $this->plugin_name ); ?></label><br />
+                                    <br /><hr /><br />
+                                    <label><input type="checkbox" name="<?php echo $this->plugin_name; ?>[product_update_content]" <?php echo ($sync_options['product_update_content'] == 1 ? " checked " : ""); ?> value="1" /> <?php  _e( "Full Product Description" , $this->plugin_name ); ?></label><p style="color:#900"><strong><?php _e('Warning'); ?>:</strong> <?php _e('If you tick \'Full Product Description\' then changes you make to product descriptions will be overwritten whenever the plugin synchronises!'); ?></p><br />
+                                    <hr />
                                 </td>
                             </tr>
                             <tr>

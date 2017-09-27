@@ -34,6 +34,6 @@ $args = array(
 	'show_ui'               => true,
 	'show_admin_column'     => true,
 	'query_var'             => true,
-	'rewrite'           	=> array( 'slug' => 'products' ),
+	'rewrite'           	=> array( 'slug' => 'whats-on' ),
 );
 register_taxonomy( 'ukds-product-category', 'ukds-products', $args );

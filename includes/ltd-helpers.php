@@ -156,6 +156,8 @@ if (! function_exists( 'ltd_sanitise_currency' )) {
 
 if (! function_exists( 'ltd_sanitise_meta_text' )) {
     function ltd_sanitise_meta_text($input) {
+        $pattern = "/<([^>\s]+)[^>]*>(?:\s*(?:<br \/>|&nbsp;|&thinsp;|&ensp;|&emsp;|&#8201;|&#8194;|&#8195;)\s*|\s*)*<\/\1>/";
+        $strip = preg_replace($pattern, '', $input);
         $allowedtags = array(
             'p'         => array(),
             'span'      => array(),
@@ -165,7 +167,7 @@ if (! function_exists( 'ltd_sanitise_meta_text' )) {
             'b'         => array(),
             'strong'    => array(),
         );
-        return wp_kses($input, $allowedtags);
+        return wp_kses($strip, $allowedtags);
     }
 }
 
@@ -347,7 +349,7 @@ if (! function_exists( 'ltd_generate_featured_image' ) ) {
         }
         catch (Exception $e) {
             $attach_id = false;
-            write_log("Error attaching image: " . $file . " to post: " . $post_id);
+            $log->Log(array("type"=>"ERROR","message"=>"Error attaching image: " . $file . " to post: " . $post_id));
         }
         return $attach_id;
     }

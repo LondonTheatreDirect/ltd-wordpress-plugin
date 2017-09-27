@@ -21,12 +21,9 @@ class Ltd_Tickets_Activator {
 
 
 
-
-
     private function checkop() {
 
         $exists = false;
-
         $options = array();
         $defaults = array();
         $defaults['version']     =       $this->version;
@@ -158,6 +155,7 @@ class Ltd_Tickets_Activator {
 
         dbDelta( $sql );
         $this->checkop();
+       	flush_rewrite_rules();
 	}
 
 }

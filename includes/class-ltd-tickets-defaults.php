@@ -57,6 +57,7 @@ class Ltd_Tickets_Defaults
 
     public static function get_sync_defaults() {
         return array(
+            'last_product_sync'                         => '',
             'import_products'                           => 0,
             'import_products_status'                    => 'publish',
             'import_venues'                             => 0,

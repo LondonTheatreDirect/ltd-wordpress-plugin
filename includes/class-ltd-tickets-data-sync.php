@@ -205,10 +205,28 @@ class LTD_Tickets_Data_Sync
             if ( strstr( $key, 'update-venue-' ) ) {
                 $post_id  = str_replace( 'update-venue-', '', $key );
                 $venue_id = get_post_meta( $post_id, 'venue_id', true );
-                $venue    = $this->integration->fetch_venue( $venue_id );
-                if ($venue === false) continue;
-                if ( $this->venue_meta( $venue, $post_id, true ) )
-                    $i++;
+
+                try {
+                    if ( empty( get_post_meta($post_id, 'last_updated', true) ) ||
+                        strtotime(get_post_meta($post_id, 'last_updated', true)) < strtotime('-1 hour')) {
+
+                        $venue = $this->integration->fetch_venue( $venue_id );
+                        if ($venue === false) continue;
+                        if ( $this->venue_meta( $venue, $post_id, true ) ) {
+                            $i++;
+                        }
+
+                    } else {
+                        throw new Exception(get_the_title($post_id) . " update failed - Venues cannot be updated more than once an hour.");
+                    }
+
+                }
+                catch ( Exception $e ) {
+                    $this->Log( array(
+                         'type' => 'ERROR',
+                        'message' => $e->getMessage(),
+                    ) );
+                }
             }
         }
         return $i;
@@ -216,7 +234,7 @@ class LTD_Tickets_Data_Sync
 
     public function sync_venues( $list = array() )
     {
-
+        $i = 0;
         $args = array(
             'posts_per_page' => -1,
             'post_type' => $this->plugin_options['config']['venue_post_type'],
@@ -229,34 +247,45 @@ class LTD_Tickets_Data_Sync
                 'draft'
             )
         );
-
         $posts = get_posts( $args );
-        $i     = 0;
         if ( !empty($posts) ) {
             foreach ( $posts as $post ):
                 $venue_id = get_post_meta( $post->ID, 'venue_id', true );
                 if ( ( count( $list ) > 0 ) && !in_array( $venue_id, $list ) ) continue;
 
-                $venue = $this->integration->fetch_venue( $venue_id );
-                if ($venue === false) continue;
+                try {
+                    if ( empty( get_post_meta($post->ID, 'last_updated', true) ) ||
+                        strtotime(get_post_meta($post->ID, 'last_updated', true)) < strtotime('-1 hour')) {
 
-                if ($this->venue_meta( $venue, $post->ID, true)) {
-                    $this->Log(array(
-                        'type'      => 'INFO',
-                        'message'   => $venue['Name'] . ' successfully synced.'
-                    ));
-                     $i++;
-                } else {
-                    $this->Log(array(
-                        'type'      => 'ERROR',
-                        'message'   => 'Failed to sync venue  : ' . (isset($venue['Name']) ? $venue['Name'] : 'Undefined')
-                    ));
+                        $venue = $this->integration->fetch_venue( $venue_id );
+                        if ($venue === false) continue;
+
+                        if ($this->venue_meta( $venue, $post->ID, true)) {
+                            $this->Log(array(
+                                'type'      => 'INFO',
+                                'message'   => $venue['Name'] . ' successfully synced.'
+                            ));
+                            $i++;
+                        } else {
+                            $this->Log(array(
+                                'type'      => 'ERROR',
+                                'message'   => 'Failed to sync venue  : ' . (isset($venue['Name']) ? $venue['Name'] : 'Undefined')
+                            ));
+                        }
+                    } else {
+                        throw new Exception($post->post_title . " update failed - Venues cannot be updated more than once an hour.");
+                    }
+
                 }
-
+                catch ( Exception $e ) {
+                    $this->Log( array(
+                         'type' => 'ERROR',
+                        'message' => $e->getMessage(),
+                    ) );
+                }
             endforeach;
         }
         return $i;
-
     }
 
     public function sync_venue( $venue_id )
@@ -279,20 +308,36 @@ class LTD_Tickets_Data_Sync
         $valid = false;
         if ( !empty($posts) ) {
             $post  = $posts[0];
-            $venue = $this->integration->fetch_venue( $venue_id );
-            if ($venue === false) return false;
 
-            if ($this->venue_meta( $venue, $post->ID, true)) {
-                $this->Log(array(
-                    'type'      => 'INFO',
-                    'message'   => $venue['Name'] . ' successfully synced.'
-                ));
-                $valid = true;
-            } else {
-                $this->Log(array(
-                    'type'      => 'ERROR',
-                    'message'   => 'Failed to sync venue  : ' . (isset($venue['Name']) ? $venue['Name'] : 'Undefined')
-                ));
+            try {
+                if ( empty( get_post_meta($post->ID, 'last_updated', true) ) ||
+                    strtotime(get_post_meta($post->ID, 'last_updated', true)) < strtotime('-1 hour')) {
+
+                    $venue = $this->integration->fetch_venue( $venue_id );
+                    if ($venue === false) return false;
+
+                    if ($this->venue_meta( $venue, $post->ID, true)) {
+                        $this->Log(array(
+                            'type'      => 'INFO',
+                            'message'   => $venue['Name'] . ' successfully synced.'
+                        ));
+                        $valid = true;
+                    } else {
+                        $this->Log(array(
+                            'type'      => 'ERROR',
+                            'message'   => 'Failed to sync venue  : ' . (isset($venue['Name']) ? $venue['Name'] : 'Undefined')
+                        ));
+                    }
+                } else {
+                    throw new Exception($post->post_title . " update failed - Venues cannot be updated more than once an hour.");
+                }
+
+            }
+            catch ( Exception $e ) {
+                $this->Log( array(
+                     'type' => 'ERROR',
+                    'message' => $e->getMessage(),
+                ) );
             }
         }
         return $valid;
@@ -301,8 +346,9 @@ class LTD_Tickets_Data_Sync
 
     private function venue_meta( $venue, $post_id, $sync = false )
     {
-
         try {
+
+            update_post_meta($post_id, 'last_updated', date('Y-m-d H:i:s'));
 
             if ( !empty( $venue['Address'] ) ) {
                 if ( !$sync || $this->plugin_options['sync']['venue_update_address'] == 1 ) {
@@ -343,7 +389,7 @@ class LTD_Tickets_Data_Sync
             }
 
             if ( !empty( $venue['VenueId'] ) ) {
-                    update_post_meta( $post_id, 'venue_id', esc_html( $venue['VenueId'] ) );
+                update_post_meta( $post_id, 'venue_id', esc_html( $venue['VenueId'] ) );
             }
 
             if ( !empty( $venue['ImageUrl'] ) ) {
@@ -354,17 +400,15 @@ class LTD_Tickets_Data_Sync
                         ltd_generate_featured_image( $venue['ImageUrl'], $post_id );
                     }
                 }
-
-
             }
 
             return true;
+
         }
         catch ( Exception $e ) {
             $this->Log( array(
                  'type' => 'ERROR',
-                'message' => sprintf( 'Venue update failed with error #%d: %s', $e->getCode(), $e->getMessage() ),
-                'stack' => var_export( $e->getTrace() )
+                'message' => $e->getMessage(),
             ) );
         }
         return false;
@@ -478,7 +522,6 @@ class LTD_Tickets_Data_Sync
         return $i;
     }
 
-
     public function import_product( $product_id )
     {
 
@@ -539,14 +582,32 @@ class LTD_Tickets_Data_Sync
             if ( strstr( $key, 'update-product-' ) ) {
                 $post_id    = str_replace( 'update-product-', '', $key );
                 $product_id = get_post_meta( $post_id, 'product_id', true );
-                $product    = $this->integration->fetch_product( $product_id );
-                if ($product === false) continue;
-                if ( $this->product_meta( $product, $post_id, true ) )
-                    $this->Log(array(
-                        'type'      => 'INFO',
-                        'message'   => $product['Name'] . ' successfully synced.'
-                    ));
-                    $i++;
+
+                try {
+                    if ( empty( get_post_meta($post_id, 'last_updated', true) ) ||
+                        strtotime(get_post_meta($post_id, 'last_updated', true)) < strtotime('-1 hour')) {
+
+                        $product    = $this->integration->fetch_product( $product_id );
+                        if ($product === false) continue;
+                        if ( $this->product_meta( $product, $post_id, true ) ) {
+                            $this->Log(array(
+                                'type'      => 'INFO',
+                                'message'   => $product['Name'] . ' successfully synced.'
+                            ));
+                            $i++;
+                        }
+
+                    } else {
+                        throw new Exception(get_the_title($post_id) . " update failed - Products cannot be updated more than once an hour.");
+                    }
+
+                }
+                catch ( Exception $e ) {
+                    $this->Log( array(
+                         'type' => 'ERROR',
+                        'message' => $e->getMessage(),
+                    ) );
+                }
             }
         }
         return $i;
@@ -554,6 +615,7 @@ class LTD_Tickets_Data_Sync
 
     public function sync_products( $list = array() )
     {
+        $i = 0;
 
         $args = array(
              'posts_per_page' => -1,
@@ -562,33 +624,43 @@ class LTD_Tickets_Data_Sync
             'order' => 'ASC',
             'suppress_filters' => 0,
             'post_status' => array(
-                 'publish',
+                'publish',
                 'pending',
                 'draft'
             )
         );
 
         $posts = get_posts( $args );
-        $i     = 0;
         if ( !empty($posts) ) {
             foreach ( $posts as $post ):
                 $product_id = get_post_meta( $post->ID, 'product_id', true );
+
                 if ( ( count( $list ) > 0 ) && !in_array( $product_id, $list ) )
                     continue;
 
-                $product = $this->integration->fetch_product( $product_id );
-                if ($product === false) continue;
-                if ( $this->product_meta( $product, $post->ID, true ) ) {
-                    $this->Log(array(
-                        'type'      => 'INFO',
-                       'message'   =>  $product['Name'] . ' successfully synced.'
-                    ));
-                    $i++;
-                } else {
-                    $this->Log(array(
-                        'type'      => 'ERROR',
-                        'message'   => 'Sync of product : ' . (isset($product['Name']) ? $product['Name'] : 'Undefined') . ' failed. '
-                    ));
+                try {
+                    if ( empty( get_post_meta($post->ID, 'last_updated', true) ) ||
+                        strtotime(get_post_meta($post->ID, 'last_updated', true)) < strtotime('-1 hour')) {
+
+                        $product = $this->integration->fetch_product( $product_id );
+                        if ($product === false) continue;
+                        if ( $this->product_meta( $product, $post->ID, true ) ) {
+                            $this->Log(array(
+                                'type'      => 'INFO',
+                               'message'   =>  $product['Name'] . ' successfully synced.'
+                            ));
+                            $i++;
+                        }
+                    } else {
+                        throw new Exception($post->post_title . " update failed - Products cannot be updated more than once an hour.");
+                    }
+
+                }
+                catch ( Exception $e ) {
+                    $this->Log( array(
+                         'type' => 'ERROR',
+                        'message' => $e->getMessage(),
+                    ) );
                 }
             endforeach;
         }
@@ -615,19 +687,36 @@ class LTD_Tickets_Data_Sync
         $valid = false;
         if ( !empty($posts) ) {
             $post    = $posts[0];
-            $product = $this->integration->fetch_product( $product_id );
-            if ($product === false) return false;
-            if ( $this->product_meta( $product, $post->ID, true ) ) {
-                $this->Log(array(
-                    'type'      => 'INFO',
-                    'message'   => $product['Name'] . ' successfully synced.'
-                ));
-                $valid = true;
-            } else {
-                $this->Log(array(
-                    'type'      => 'ERROR',
-                    'message'   => 'Sync of product : ' . (isset($product['Name']) ? $product['Name'] : 'Undefined') . ' failed. '
-                ));
+
+            try {
+                if ( empty( get_post_meta($post->ID, 'last_updated', true) ) ||
+                        strtotime(get_post_meta($post->ID, 'last_updated', true)) < strtotime('-1 hour')) {
+
+                        $product = $this->integration->fetch_product( $product_id );
+                        if ($product === false) return false;
+                        if ( $this->product_meta( $product, $post->ID, true ) ) {
+                            $this->Log(array(
+                                'type'      => 'INFO',
+                                'message'   => $product['Name'] . ' successfully synced.'
+                            ));
+                            $valid = true;
+                        } else {
+                            $this->Log(array(
+                                'type'      => 'ERROR',
+                                'message'   => 'Sync of product : ' . (isset($product['Name']) ? $product['Name'] : 'Undefined') . ' failed. '
+                            ));
+                        }
+
+                } else {
+                    throw new Exception($post->post_title . " update failed - Products cannot be updated more than once an hour.");
+                }
+
+            }
+            catch ( Exception $e ) {
+                $this->Log( array(
+                     'type' => 'ERROR',
+                    'message' => $e->getMessage(),
+                ) );
             }
         }
         return $valid;
@@ -635,8 +724,27 @@ class LTD_Tickets_Data_Sync
 
     private function product_meta( $product, $post_id, $sync = false )
     {
-
         try {
+
+            update_post_meta($post_id, 'last_updated', date('Y-m-d H:i:s'));
+
+            if ( !empty( $product['Description'] ) ) {
+                if ( !$sync || $this->plugin_options['sync']['product_update_content'] == 1 ) {
+                    $content = preg_replace(array('"<a (.*?)>"', '"</a>"'), array('',''), $product['Description']);
+                    $my_post = array(
+                        'ID'           => $post_id,
+                        'post_content' => $content,
+                    );
+                    wp_update_post( $my_post );
+                    if (is_wp_error($post_id)) {
+                        $errors = $post_id->get_error_messages();
+                        foreach ($errors as $error) {
+                            throw new Exception($error);
+                        }
+                    }
+                }
+            }
+
             if ( !empty( $product['RunningTime'] ) ) {
                 if ( !$sync || $this->plugin_options['sync']['product_update_running_time'] == 1 )
                     update_post_meta( $post_id, 'running_time', esc_html( $product['RunningTime'] ) );
@@ -668,20 +776,29 @@ class LTD_Tickets_Data_Sync
                     update_post_meta( $post_id, 'minimum_price', $product['EventMinimumPrice'] );
             }
             if ( !empty( $product['CurrentPrice'] ) ) {
-                if ( !$sync || $this->plugin_options['sync']['product_update_current_price'] == 1 )
-                    update_post_meta( $post_id, 'current_price', $product['CurrentPrice'] );
+                if ( !$sync || $this->plugin_options['sync']['product_update_current_price'] == 1 ) {
+                    $current_price = ($product['CurrentPrice'] == "" ? $product['EventMinimumPrice'] : $product['CurrentPrice']);
+                    update_post_meta( $post_id, 'current_price', $current_price );
+                }
             }
             if ( !empty( $product['OfferPrice'] ) ) {
-                if ( !$sync || $this->plugin_options['sync']['product_update_offer_price'] == 1 )
-                    update_post_meta( $post_id, 'offer_price', $product['OfferPrice'] );
+                if ( !$sync || $this->plugin_options['sync']['product_update_offer_price'] == 1 ) {
+                    $offer_price = ($product['OfferPrice'] == "" ? $product['EventMinimumPrice'] : $product['OfferPrice']);
+                    update_post_meta( $post_id, 'offer_price', $offer_price  );
+                }
             }
             if ( !empty( $product['ShortOfferText'] ) ) {
-                if ( !$sync || $this->plugin_options['sync']['product_update_short_offer_text'] == 1 )
-                    update_post_meta( $post_id, 'short_offer_text', $product['ShortOfferText'] );
+                if ( !$sync || $this->plugin_options['sync']['product_update_short_offer_text'] == 1 ) {
+                    $short_offer_text = ltd_sanitise_meta_text($product['ShortOfferText']);
+                    update_post_meta( $post_id, 'short_offer_text', $short_offer_text );
+                }
+
             }
             if ( !empty( $product['LongOfferText'] ) ) {
-                if ( !$sync || $this->plugin_options['sync']['product_update_long_offer_text'] == 1 )
-                    update_post_meta( $post_id, 'long_offer_text', $product['LongOfferText'] );
+                if ( !$sync || $this->plugin_options['sync']['product_update_long_offer_text'] == 1 ) {
+                    $long_offer_text = ltd_sanitise_meta_text($product['LongOfferText']);
+                    update_post_meta( $post_id, 'long_offer_text', $long_offer_text );
+                }
             }
             if ( !empty( $product['MainImageUrl'] ) ) {
                 if(ltd_curl_get_headers($product['MainImageUrl']) == "200"){
@@ -730,11 +847,6 @@ class LTD_Tickets_Data_Sync
                     wp_set_post_terms( $post_id, $terms[0]->term_taxonomy_id, $this->plugin_options['config']['product_category_taxonomy'] );
                 }
             }
-
-
-
-
-
             //if ( !empty( $product['Images'] ) & !$sync ) {
             //    $thisImageCollection = $product['Images'];
             //    $attachment_ids      = array();
@@ -764,8 +876,7 @@ class LTD_Tickets_Data_Sync
         catch ( Exception $e ) {
             $this->Log( array(
                  'type' => 'ERROR',
-                'message' => sprintf( 'Product update failed with error #%d: %s', $e->getCode(), $e->getMessage() ),
-                'stack' => var_export( $e->getTrace() )
+                'message' => $e->getMessage(),
             ) );
         }
         return false;

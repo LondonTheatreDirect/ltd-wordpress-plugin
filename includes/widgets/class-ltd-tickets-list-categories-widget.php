@@ -64,6 +64,9 @@ class Ltd_Tickets_List_Categories_Widget extends WP_Widget
         echo $args['before_widget'];
         echo $args['before_title'] . $instance[ 'title' ] .  $args['after_title'];
 
+        $tax = get_taxonomy($this->plugin_options['config']['product_category_taxonomy']);
+        $tax_slug = $tax->rewrite['slug'];
+
         $terms = get_terms(
             array (
                  'taxonomy'          => $this->plugin_options['config']['product_category_taxonomy'],
@@ -74,7 +77,7 @@ class Ltd_Tickets_List_Categories_Widget extends WP_Widget
         if (!empty($terms)) {
             echo "<ul>";
             foreach($terms as $term) {
-                echo "<li><a href='/products/" . $term->slug . "/'>" . $term->name . "</a></li>";
+                echo "<li><a href='/$tax_slug/" . $term->slug . "/'>" . $term->name . "</a></li>";
             }
             echo "</ul>";
         }

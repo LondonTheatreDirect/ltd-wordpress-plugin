@@ -98,6 +98,15 @@
 		    toggleChecked(scope);
 		})
 
+		$("input[name='ltd-tickets[product_update_content]']").on("change", function (e) {
+		    if ($(this).is(":checked")) {
+		        if (confirm("Are you sure? Any changes you make to product descriptions will be lost every time the plugin synchronises!")) {
+
+		        } else {
+		            $(this).prop('checked', false)
+		        }
+		    }
+		});
 
 	});
 

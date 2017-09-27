@@ -16,7 +16,7 @@
  * Plugin Name:       London Theatre Direct
  * Plugin URI:        https://developer.londontheatredirect.com/
  * Description:       Turn your WordPress website into a ticketing site with the London Theatre Direct Tickets Plugin. Become an affiliate and earn commission from referred sales - also compatible with AWIN.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            London Theatre Direct
  * Author URI:        https://www.londontheatredirect.com
  * License:           GPL-2.0+
@@ -41,7 +41,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 function run_ltd_tickets() {
     define( 'LTD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-    define( 'LTD_PLUGIN_VERSION', '1.0.1' );
+    define( 'LTD_PLUGIN_VERSION', '1.0.2' );
     define( 'LTD_PLUGIN_NAME', 'ltd-tickets' );
     define( 'LTD_ABSPATH', dirname( __FILE__ ) . '/' );
     define( 'LTD_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );

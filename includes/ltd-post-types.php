@@ -253,7 +253,7 @@ function product_post_type_fields( $post_id, $post ) {
             update_post_meta( $post_id, 'short_offer_text', $short_offer_text );
         }
 
-        if ( isset( $_POST['product_post_type_long_offer_text'] ) && $_POST['product_post_type_long_offer_text'] != '' ) {
+        if ( isset( $_POST['product_post_type_long_offer_text'] ) ) {
             $long_offer_text = ltd_sanitise_meta_text($_POST['product_post_type_long_offer_text']);
 
             update_post_meta( $post_id, 'long_offer_text', $long_offer_text );
@@ -273,17 +273,17 @@ function product_post_type_fields( $post_id, $post ) {
             }
         }
 
-        if ( isset( $_POST['product_post_type_running_time'] ) && $_POST['product_post_type_running_time'] != '' ) {
+        if ( isset( $_POST['product_post_type_running_time'] ) ) {
             $running_time = sanitize_text_field($_POST['product_post_type_running_time']);
             update_post_meta( $post_id, 'running_time', $running_time );
         }
 
-        if ( isset( $_POST['product_post_type_minimum_age'] ) && $_POST['product_post_type_minimum_age'] != '' ) {
+        if ( isset( $_POST['product_post_type_minimum_age'] ) ) {
             $minimum_age = sanitize_text_field($_POST['product_post_type_minimum_age']);
             update_post_meta( $post_id, 'minimum_age', $minimum_age );
         }
 
-        if ( isset( $_POST['product_post_type_gallery_images'] ) && $_POST['product_post_type_gallery_images'] != '' ) {
+        if ( isset( $_POST['product_post_type_gallery_images'] ) ) {
             $gallery_images = sanitize_text_field($_POST['product_post_type_gallery_images']);
             update_post_meta( $post_id, 'gallery_images', $gallery_images );
         }
@@ -292,7 +292,7 @@ function product_post_type_fields( $post_id, $post ) {
             update_post_meta( $post_id, 'main_image_url', esc_url($_POST['product_post_type_main_image_url']) );
         }
 
-        if ( isset( $_POST['product_post_type_important_notice'] ) && $_POST['product_post_type_important_notice'] != '' ) {
+        if ( isset( $_POST['product_post_type_important_notice'] ) ) {
             $important_notice = ltd_sanitise_meta_text($_POST['product_post_type_important_notice']);
             update_post_meta( $post_id, 'important_notice', $important_notice);
         }
@@ -305,7 +305,7 @@ function product_post_type_fields( $post_id, $post ) {
                 update_post_meta( $post_id, 'target_url_override', $target_url_override);
             }
 
-            if ( isset( $_POST['product_post_type_tagline'] ) && $_POST['product_post_type_tagline'] != '' ) {
+            if ( isset( $_POST['product_post_type_tagline'] ) ) {
                 $tagline = sanitize_text_field($_POST['product_post_type_tagline']);
                 update_post_meta( $post_id, 'tagline', $tagline );
             }

@@ -1,6 +1,6 @@
 === London Theatre Direct ===
 Contributors: ukdesignservices
-Tags: tickets theatre, theatre, tickets, london, london theatre direct, affiliate, events tickets,
+Tags: affiliate, events tickets, london, theatre, tickets, theater
 Requires at least: 4.4.0
 Tested up to: 4.8
 Stable tag: 1.0.1
