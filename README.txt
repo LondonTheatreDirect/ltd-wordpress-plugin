@@ -71,3 +71,18 @@ Coming Soon.
 
 = 1.0 =
 * Initial Release
+
+= 1.0.1 =
+* Bug fixes
+
+= 1.0.2 =
+* Added 'last_updated' value to product and venues to prevent overloading API
+* Updates to Logging functions
+* Fixed bug on products ending today
+* Fixed URL slug conflict with Woocommerce. /product/musicals/ is now /whats-on/musicals/ Permalink refresh required
+* Added option to sync product description (with warning)
+
+== Upgrade Notice ==
+
+= 1.0.2 =
+Upgrade fixes URL conflict with Woocommerce. After upgrade refresh permalinks by going to Settings > Permalinks and click 'Save Changes'.

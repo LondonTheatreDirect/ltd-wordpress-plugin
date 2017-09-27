@@ -15,7 +15,7 @@ $endDate = strtotime(get_post_meta(get_the_ID(), 'end_date', true));
 $nowDate = strtotime('today midnight');
 $inPast = ($endDate < $nowDate ? true : false);
 $special = get_post_meta(get_the_ID(), "short_offer_text", true);
-if ($special == "" && $endDate == $nowDate) $special = __('Ends Today!', $this->plugin_name);
+if ($special == "" && $endDate == $nowDate) $special = __('Ends Today!', LTD_PLUGIN_NAME);
 ?>
 
 <div class="<?php echo $default_class; ?>" itemscope="" itemtype="http://schema.org/Product">
