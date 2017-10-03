@@ -155,7 +155,5 @@ class Ltd_Tickets_Activator {
 
         dbDelta( $sql );
         $this->checkop();
-       	flush_rewrite_rules();
 	}
-
 }

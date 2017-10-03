@@ -41,6 +41,11 @@ This section describes how to install the plugin and get it working.
 5. On the 'Import Settings' tab, either choose what you'd like to import, or import everything with a single click
 
 
+== Documentation and How-to ==
+
+For instructions, documentation and tutorials, check out the [Plugin Website](https://wordpress.londontheatredirect.com)
+
+
 == Frequently Asked Questions ==
 
 = Do I need to be a London Theatre Direct partner to use the plugin? =

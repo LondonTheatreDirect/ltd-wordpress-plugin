@@ -233,12 +233,16 @@ class LTD_Tickets_Template_Functions {
 
         if (!$done) {
             if (is_tax($this->plugin_options['config']['product_category_taxonomy'])) {
+                $tax = get_taxonomy($this->plugin_options['config']['product_category_taxonomy']);
+                $tax_slug = $tax->rewrite['slug'];
                 $queried_object = get_queried_object();
-                echo '<li><a href="/products/' . $queried_object->slug . '/">' . $queried_object->name . '</a></li>';
+                echo "<li><a href='/$tax_slug/" . $queried_object->slug . "/'>" . $queried_object->name . "</a></li>";
             } else if (is_single() && get_post_type() === $this->plugin_options['config']['product_post_type']) {
                 $terms  = wp_get_post_terms($post->ID, $this->plugin_options['config']['product_category_taxonomy']);
                 if (isset($terms[0])) {
-                    echo '<li><a href="/products/' . $terms[0]->slug . '/">' . $terms[0]->name . '</a></li>';
+                    $tax = get_taxonomy($this->plugin_options['config']['product_category_taxonomy']);
+                    $tax_slug = $tax->rewrite['slug'];
+                    echo "<li><a href='/$tax_slug/" . $terms[0]->slug . "/'>" . $terms[0]->name . "</a></li>";
                 }
             }
         }
@@ -395,9 +399,11 @@ class LTD_Tickets_Template_Functions {
             echo "</tr>";
         }
         if (!empty($term_list[0])) {
+            $tax = get_taxonomy($this->plugin_options['config']['product_category_taxonomy']);
+            $tax_slug = $tax->rewrite['slug'];
             echo "<tr>";
             echo "<td>". __('Category', $this->plugin_name) ."</td>";
-            echo "<td><a href='/products/" . $term_list[0]->slug . "/' title='" . $term_list[0]->name . " " . __('Tickets', $this->plugin_name) . "'>" . $term_list[0]->name . "</a></td>";
+            echo "<td><a href='/$tax_slug/" . $term_list[0]->slug . "/' title='" . $term_list[0]->name . " " . __('Tickets', $this->plugin_name) . "'>" . $term_list[0]->name . "</a></td>";
             echo "</tr>";
         }
         echo "</tbody>";
